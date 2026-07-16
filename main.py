@@ -27,6 +27,9 @@ def hello_world():
     # Retorna uma mensagem de saudação em formato JSON
     return {"mensagem": "Olá, mundo! 🌍"}
 
+# Constante com o total de figurinhas do álbum completo
+TOTAL_ALBUM = 40
+
 # Lista central de figurinhas com id, nome, categoria e URL da imagem
 figurinhas = [
     {"id": 1, "nome": "Neo",      "categoria": "THE MATRIX - 1999", "imagem_url": "/imgs/01-neo.jpg"},
@@ -38,6 +41,22 @@ figurinhas = [
 def listar_figurinhas():
     # Retorna a lista completa de figurinhas em formato JSON
     return figurinhas
+
+# Definindo o endpoint GET na rota "/figurinhas/total"
+# IMPORTANTE: deve vir ANTES de "/figurinhas/{figurinha_id}" para o FastAPI não
+# confundir a palavra "total" com um figurinha_id dinâmico
+@app.get("/figurinhas/total")
+def estatisticas_album():
+    # Calcula as figurinhas coladas a partir do tamanho atual da lista
+    coladas = len(figurinhas)
+    # Calcula quantas ainda faltam para completar o álbum
+    faltam = TOTAL_ALBUM - coladas
+    # Retorna as estatísticas calculadas dinamicamente
+    return {
+        "total_album": TOTAL_ALBUM,
+        "coladas": coladas,
+        "faltam": faltam,
+    }
 
 # Definindo o endpoint GET na rota "/figurinhas/{figurinha_id}"
 @app.get("/figurinhas/{figurinha_id}")
